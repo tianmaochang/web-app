@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fyxt.w.dao.system.MenuDao">
+	
+	<sql id="menuColumns">
+		a.id,
+		a.name,
+		a.href,
+		a.permission,
+		a.type,
+		a.sort,
+		a.icon,
+		a.parent_id AS "parent.id"
+	</sql>
+	
+	<resultMap type="TreeVo" id="MenuTree">
+		<id property="value" column="id" />
+		<result property="label" column="name" />
+		<collection column="id" property="childs" ofType="TreeVo" select="findTreeChild"/>
+	</resultMap>
+	
+	<resultMap id="menuMap" type="Menu">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<collection column="id" property="childs" ofType="Menu" select="findMenuChild"/>
+	</resultMap>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO t_menu(
+			name, 
+			href, 
+			permission, 
+			type, 
+			sort,
+			icon
+			<if test="parent != null and parent.id != null">
+			,parent_id
+			</if>
+		) VALUES (
+			#{name}, 
+			#{href}, 
+			#{permission}, 
+			#{type}, 
+			#{sort},
+			#{icon}
+			<if test="parent != null and parent.id != null">
+			,#{parent.id}
+			</if>
+		)
+	</insert>
+	
+	<delete id="delete">
+		DELETE a FROM t_menu a WHERE a.id=#{id} 
+		AND NOT EXISTS (SELECT * FROM (SELECT 1 FROM t_menu x WHERE x.parent_id=#{id}) T)
+	</delete>
+	
+	<update id="update">
+		UPDATE t_menu SET
+		name=#{name},
+		href=#{href},
+		permission=#{permission},
+		type=#{type}, 
+		sort=#{sort},
+		icon=#{icon}
+		<if test="parent != null and parent.id != null">
+		,parent_id=#{parent.id}
+		</if>
+		WHERE id=#{id}
+	</update>
+	
+	<select id="get" resultType="Menu">
+		SELECT <include refid="menuColumns" />,b.name AS "parent.name"
+		FROM t_menu a LEFT JOIN t_menu b ON a.parent_id=b.id 
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findTree" resultMap="MenuTree">
+		SELECT id, name
+		FROM t_menu 
+		WHERE parent_id=-1
+		ORDER BY sort
+	</select>
+	
+	<select id="findTreeChild" resultMap="MenuTree">
+		SELECT id, name
+		FROM t_menu
+		WHERE parent_id=#{id} and type=0
+		ORDER BY sort
+	</select>
+	
+	<select id="findMenuForRole" resultMap="menuMap">
+		SELECT a.id, a.name
+		FROM t_menu a
+		WHERE a.parent_id=-1 
+		ORDER BY a.sort
+	</select>
+	
+	<select id="findMenuChild" resultMap="menuMap">
+		SELECT id, name
+		FROM t_menu
+		WHERE parent_id=#{id}
+		ORDER BY sort
+	</select>
+	
+	<select id="findAll" resultType="Menu">
+		SELECT <include refid="menuColumns" />
+		FROM t_menu a
+	</select>
+	
+	<select id="findPage" resultType="Menu">
+		SELECT <include refid="menuColumns" />, b.name AS "parent.name"
+		FROM t_menu a LEFT JOIN t_menu b ON a.parent_id=b.id 
+		<where>
+			<if test="name != null and name != ''">
+				a.name like CONCAT('%',#{name},'%') 
+			</if>
+			<if test="permission != null and permission != ''">
+				AND a.permission like CONCAT('%',#{permission},'%') 
+			</if>
+		</where>
+		ORDER BY a.id DESC
+	</select>
+	
+</mapper>

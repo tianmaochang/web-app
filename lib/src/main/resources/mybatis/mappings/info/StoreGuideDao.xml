@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fyxt.w.dao.info.StoreGuideDao" >
+
+  <sql id="Base_Column_List" >
+    n.id id,
+    n.title title,
+    n.content content
+  </sql>
+
+  <select id="get" resultType="com.fyxt.w.entity.info.StoreGuide" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from store_guide n
+    where n.id = #{id}
+  </select>
+
+  <select id="findPage" resultType="com.fyxt.w.entity.info.StoreGuide">
+    select
+    <include refid="Base_Column_List" />
+    from store_guide n
+    where 1=1
+    <if test="title != null and '' != title" >
+      and title like CONCAT('%',#{title},'%')
+    </if>
+  </select>
+
+  <select id="findAll" resultType="com.fyxt.w.entity.info.StoreGuide">
+    select
+    <include refid="Base_Column_List" />
+    from store_guide n
+  </select>
+
+  <insert id="insert" parameterType="com.fyxt.w.entity.info.StoreGuide" >
+    insert into store_guide
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="content != null" >
+        content
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="title != null" >
+        #{title},
+      </if>
+      <if test="content != null" >
+        #{content}
+      </if>
+    </trim>
+  </insert>
+
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from store_guide
+    where id = #{id}
+  </delete>
+
+  <update id="update" parameterType="com.fyxt.w.entity.info.StoreGuide" >
+    update store_guide
+    <set >
+      <if test="title != null" >
+        title = #{title},
+      </if>
+      <if test="content != null" >
+        content = #{content}
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+</mapper>

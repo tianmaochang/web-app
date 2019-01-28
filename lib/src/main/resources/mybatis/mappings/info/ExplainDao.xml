@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fyxt.w.dao.info.ExplainDao" >
+  
+  <sql id="Base_Column_List" >
+    n.id id, 
+    n.msg msg
+  </sql>
+
+  <select id="get" resultType="com.fyxt.w.entity.info.Explain" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from explains n
+    where n.id = #{id}
+  </select>
+
+  <select id="findPage" resultType="com.fyxt.w.entity.info.Explain">
+    select
+    <include refid="Base_Column_List" />
+    from explains n
+  </select>
+
+  <select id="findAll" resultType="com.fyxt.w.entity.info.Explain">
+    select
+    <include refid="Base_Column_List" />
+    from explains n
+  </select>
+
+  <insert id="insert" parameterType="com.fyxt.w.entity.info.Explain" >
+    insert into explains
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="msg != null" >
+        msg
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="msg != null" >
+        #{msg}
+      </if>
+    </trim>
+  </insert>
+  
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from explains
+    where id = #{id}
+  </delete>
+  
+  <update id="update" parameterType="com.fyxt.w.entity.info.Explain" >
+    update explains
+    <set >
+      <if test="msg != null" >
+        msg = #{msg}
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+</mapper>

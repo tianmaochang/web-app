@@ -1,0 +1,26 @@
+package com.fyxt.w.entity.common;
+
+/******
+ * 信息状态(包括：图片新闻、紧急公告、栏目信息等)
+ * (审核通过即上刊)
+ * @author ATH
+ *
+ */
+public enum InfoStatus {
+	
+	DSH("待审核"), YSK("已上刊"), YXK("已下刊");
+	
+	private String name;
+	
+	private InfoStatus(String name){
+		this.name = name;
+	}
+	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+}

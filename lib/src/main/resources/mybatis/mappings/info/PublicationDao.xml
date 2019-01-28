@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fyxt.w.dao.info.PublicationDao" >
+
+  <sql id="Base_Column_List" >
+    n.id id,
+    n.pub_name pubName,
+    n.pub_img_url pubImgUrl
+  </sql>
+
+  <select id="get" resultType="com.fyxt.w.entity.info.Publication" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from publication n
+    where n.id = #{id}
+  </select>
+
+  <select id="findPage" resultType="com.fyxt.w.entity.info.Publication">
+    select
+    <include refid="Base_Column_List" />
+    from publication n
+    where 1=1
+    <if test="pubName != null and '' != pubName" >
+      and pub_name like CONCAT('%',#{pubName},'%')
+    </if>
+  </select>
+
+  <select id="findAll" resultType="com.fyxt.w.entity.info.Publication">
+    select
+    <include refid="Base_Column_List" />
+    from publication n
+  </select>
+
+  <insert id="insert" parameterType="com.fyxt.w.entity.info.Publication" >
+    insert into publication
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="pubName != null" >
+        pub_name,
+      </if>
+      <if test="pubImgUrl != null" >
+        pub_img_url
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="pubName != null" >
+        #{pubName},
+      </if>
+      <if test="pubImgUrl != null" >
+        #{pubImgUrl}
+      </if>
+    </trim>
+  </insert>
+
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from publication
+    where id = #{id}
+  </delete>
+
+  <update id="update" parameterType="com.fyxt.w.entity.info.Publication" >
+    update publication
+    <set >
+      <if test="pubName != null" >
+        pub_name = #{pubName},
+      </if>
+      <if test="pubImgUrl != null" >
+        pub_img_url = #{pubImgUrl}
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+</mapper>

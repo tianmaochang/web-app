@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fyxt.w.dao.info.ImgDao" >
+
+  <sql id="Base_Column_List" >
+    n.id id,
+    n.img_name imgName,
+    n.img_url imgUrl
+  </sql>
+
+  <select id="get" resultType="com.fyxt.w.entity.info.Img" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from img_storage n
+    where n.id = #{id}
+  </select>
+
+  <select id="findPage" resultType="com.fyxt.w.entity.info.Img">
+    select
+    <include refid="Base_Column_List" />
+    from img_storage n
+    where 1=1
+    <if test="imgName != null and '' != imgName" >
+      and img_name like CONCAT('%',#{imgName},'%')
+    </if>
+  </select>
+
+  <select id="findAll" resultType="com.fyxt.w.entity.info.Img">
+    select
+    <include refid="Base_Column_List" />
+    from img_storage n
+
+  </select>
+
+  <insert id="insert" parameterType="com.fyxt.w.entity.info.Img" >
+    insert into img_storage
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="imgName != null" >
+        img_name,
+      </if>
+      <if test="imgUrl != null" >
+        img_url
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="imgName != null" >
+        #{imgName},
+      </if>
+      <if test="imgUrl != null" >
+        #{imgUrl}
+      </if>
+    </trim>
+  </insert>
+
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from img_storage
+    where id = #{id}
+  </delete>
+
+  <update id="update" parameterType="com.fyxt.w.entity.info.Img" >
+    update img_storage
+    <set >
+      <if test="imgName != null" >
+        img_name = #{imgName},
+      </if>
+      <if test="imgUrl != null" >
+        img_url = #{imgUrl}
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+</mapper>

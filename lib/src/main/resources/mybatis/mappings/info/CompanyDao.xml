@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.fyxt.w.dao.info.CompanyDao" >
+
+  <sql id="Base_Column_List" >
+    n.id id,
+    n.name name,
+    n.en_name enName,
+    n.hotline hotline,
+    n.telephone telephone,
+    n.mobile mobile,
+    n.fax fax
+  </sql>
+
+  <select id="get" resultType="com.fyxt.w.entity.info.Company" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from company n
+    where n.id = #{id}
+  </select>
+
+  <select id="findPage" resultType="com.fyxt.w.entity.info.Company">
+    select
+    <include refid="Base_Column_List" />
+    from company n
+  </select>
+
+  <select id="findAll" resultType="com.fyxt.w.entity.info.Company">
+    select
+    <include refid="Base_Column_List" />
+    from company n
+  </select>
+
+  <insert id="insert" parameterType="com.fyxt.w.entity.info.Company" >
+    insert into company
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="enName != null" >
+        en_name,
+      </if>
+      <if test="hotline != null" >
+        hotline,
+      </if>
+      <if test="telephone != null" >
+        telephone,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="fax != null" >
+        fax
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="name != null" >
+        #{name},
+      </if>
+      <if test="enName != null" >
+        #{enName},
+      </if>
+      <if test="hotline != null" >
+        #{hotline},
+      </if>
+      <if test="telephone != null" >
+        #{telephone},
+      </if>
+      <if test="mobile != null" >
+        #{mobile},
+      </if>
+      <if test="fax != null" >
+        #{fax}
+      </if>
+    </trim>
+  </insert>
+
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from company
+    where id = #{id}
+  </delete>
+
+  <update id="update" parameterType="com.fyxt.w.entity.info.Company" >
+    update company
+    <set >
+      <if test="name != null" >
+        name = #{name},
+      </if>
+      <if test="enName != null" >
+        en_name = #{enName},
+      </if>
+      <if test="hotline != null" >
+        hotline = #{holine},
+      </if>
+      <if test="telephone != null" >
+        telephone = #{telephone},
+      </if>
+      <if test="mobile != null" >
+        mobile = #{mobile},
+      </if>
+      <if test="fax != null" >
+        fax = #{fax}
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+</mapper>
